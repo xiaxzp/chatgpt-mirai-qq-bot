@@ -11,6 +11,7 @@ import uuid
 from time import sleep
 import json
 import openai
+import re
 
 config = Config.load_config()
 openai.api_key = config.openai.api_key;
@@ -22,7 +23,7 @@ def getChatResp(history: list[str]):
         prompt=history,
         temperature=config.openai.temperature,
         max_tokens=2048,
-        stop=["Q:", "A:","<|im_end|>"]
+        stop=["<|im_end|>"]
     )
 class ChatSession:
     chat_history: list[str]
@@ -74,6 +75,8 @@ class ChatSession:
         #     stop="<|im_end|>"
         # )
         final_resp = final_resp["choices"][0]["text"]
+        final_resp = final_resp if final_resp else '阿巴阿巴'
+        final_resp = re.sub("^A:", '', final_resp)
         self.chat_history.append('A: '+ final_resp[0:12] + '<|im_end|>');
         return final_resp
 
