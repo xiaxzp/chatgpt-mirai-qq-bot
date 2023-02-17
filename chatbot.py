@@ -78,6 +78,7 @@ class ChatSession:
         final_resp = final_resp if final_resp else '阿巴阿巴'
         final_resp = re.sub("^A:", '', final_resp)
         self.chat_history.append('A: '+ final_resp[0:12] + '<|im_end|>');
+        print(final_resp);
         return final_resp
 
 __sessions = {}
