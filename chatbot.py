@@ -22,7 +22,7 @@ def getChatResp(history: list[str]):
         model="text-davinci-003",
         prompt=history,
         temperature=config.openai.temperature,
-        max_tokens=1000,
+        max_tokens=2000,
         presence_penalty=0.5,
         frequency_penalty=1,
         stop=["<|im_end|>"]
@@ -60,10 +60,10 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        if len(self.chat_history) > 14:
+        if len(self.chat_history) > 10:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
-        self.chat_history.append('Human: '+ message + '<|im_end|>');
+        self.chat_history.append('Human: '+ message[0:20] + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
