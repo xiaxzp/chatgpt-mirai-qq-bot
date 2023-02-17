@@ -60,6 +60,9 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
+        if len(self.chat_history) > 16:
+            self.chat_history.pop(0);
+            self.chat_history.pop(0);
         self.chat_history.append('Human: '+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
