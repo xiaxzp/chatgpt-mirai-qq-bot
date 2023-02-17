@@ -66,7 +66,6 @@ class ChatSession:
             "\n".join(self.chat_history),
         )
         print('final resp');
-        print(final_resp);
         # final_resp = openai.Completion.create(
         #     model="text-davinci-003",
         #     prompt="Say this is a test",
@@ -76,7 +75,7 @@ class ChatSession:
         # )
         final_resp = final_resp["choices"][0]["text"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
-        final_resp = re.sub("^A:", '', final_resp)
+        final_resp = re.sub("^\n*A:", '', final_resp)
         self.chat_history.append('A: '+ final_resp[0:12] + '<|im_end|>');
         print(final_resp);
         return final_resp
