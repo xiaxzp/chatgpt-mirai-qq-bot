@@ -1,4 +1,4 @@
-from revChatGPT.Official import Chatbot, Prompt
+# from revChatGPT.Official import Chatbot, Prompt
 from graia.ariadne.app import Ariadne
 from graia.ariadne.model import Friend, Group
 from graia.ariadne.message import Source
@@ -10,9 +10,11 @@ import asyncio
 import uuid
 from time import sleep
 import json
+import openai
 
 config = Config.load_config()
-bot = Chatbot(api_key=config.openai.api_key)
+openai.api_key = os.getenv("OPENAI_API_KEY")
+# bot = Chatbot(api_key=config.openai.api_key)
 
 class ChatSession:
     chat_history: list[str]
@@ -46,9 +48,27 @@ class ChatSession:
             return self.chat_history[-1].split('\nChatGPT:')[-1].strip().rstrip("<|im_end|>")
 
     async def get_chat_response(self, message) -> str:
-        bot.prompt.chat_history = self.chat_history
+        # bot.prompt.chat_history = self.chat_history
+        self.chat_history.append('\nQ: '+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
-        final_resp = await loop.run_in_executor(None, bot.ask, message, config.openai.temperature)
+        final_resp = await loop.run_in_executor(
+            None,
+            openai.Completion.create,
+            model="text-davinci-003",
+            prompt=self.chat_history,
+            temperature=config.openai.temperature,
+            max_tokens=7,
+            stop="<|im_end|>"
+        )
+        print('final resp');
+        print(final_resp);
+        # final_resp = openai.Completion.create(
+        #     model="text-davinci-003",
+        #     prompt="Say this is a test",
+        #     temperature=config.openai.temperature,
+        #     max_tokens=7,
+        #     stop="<|im_end|>"
+        # )
         final_resp = final_resp["choices"][0]["text"]
         return final_resp
 

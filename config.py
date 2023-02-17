@@ -53,6 +53,11 @@ class OpenAIAPIKey(OpenAIAuthBase):
     api_key: str
     """OpenAI 的 api_key"""
 
+
+class OpenAIModel(BaseModel):
+    model: str = "text-davinci-003";
+    """OpenAI 的 model"""
+
 class TextToImage(BaseModel):
     font_size: int = 30
     """字号"""
@@ -123,6 +128,7 @@ class Preset(BaseModel):
 class Config(BaseModel):
     mirai: Mirai
     openai: Union[OpenAIEmailAuth, OpenAISessionTokenAuth, OpenAIAPIKey]
+    model: OpenAIModel = OpenAIModel();
     text_to_image: TextToImage = TextToImage()
     trigger: Trigger = Trigger()
     response: Response = Response()
