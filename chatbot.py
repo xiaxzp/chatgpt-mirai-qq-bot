@@ -15,7 +15,14 @@ import openai
 config = Config.load_config()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 # bot = Chatbot(api_key=config.openai.api_key)
-
+def getChatResp(history: list[str]):
+    openai.Completion.create(
+        model="text-davinci-003",
+        prompt=history,
+        temperature=config.openai.temperature,
+        max_tokens=7,
+        stop="<|im_end|>"
+    )
 class ChatSession:
     chat_history: list[str]
     def __init__(self):
@@ -53,12 +60,8 @@ class ChatSession:
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
-            openai.Completion.create,
-            model="text-davinci-003",
-            prompt=self.chat_history,
-            temperature=config.openai.temperature,
-            max_tokens=7,
-            stop="<|im_end|>"
+            getChatResp,
+            self.chat_history,
         )
         print('final resp');
         print(final_resp);
