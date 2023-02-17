@@ -90,8 +90,9 @@ GroupTrigger = Annotated[MessageChain, MentionMe(config.trigger.require_mention 
 async def group_message_listener(group: Group, source: Source, chain: GroupTrigger):
 
     print('msg');
-    print(group);
+    print(dir(group));
     print(source);
+    print(dir(source));
     response = await handle_message(group, f"group-{group.id}", chain.display, source)
     event = await app.send_message(group, response)
     if event.source.id < 0:

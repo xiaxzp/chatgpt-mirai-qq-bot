@@ -57,12 +57,12 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        self.chat_history.append('\nQ: '+ message + '<|im_end|>');
+        self.chat_history.append('Q: '+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
             getChatResp,
-            self.chat_history,
+            "\n".join(self.chat_history),
         )
         print('final resp');
         print(final_resp);
