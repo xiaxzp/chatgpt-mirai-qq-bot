@@ -21,7 +21,7 @@ def getChatResp(history: list[str]):
         model="text-davinci-003",
         prompt=history,
         temperature=config.openai.temperature,
-        max_tokens=7,
+        max_tokens=2048,
         stop="<|im_end|>"
     )
 class ChatSession:
