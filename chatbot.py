@@ -22,7 +22,7 @@ def getChatResp(history: list[str]):
         model="text-davinci-003",
         prompt=history,
         temperature=config.openai.temperature,
-        max_tokens=2048,
+        max_tokens=1000,
         presence_penalty=0.5,
         frequency_penalty=1,
         stop=["<|im_end|>"]
@@ -60,7 +60,7 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        if len(self.chat_history) > 16:
+        if len(self.chat_history) > 14:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
         self.chat_history.append('Human: '+ message + '<|im_end|>');
@@ -71,6 +71,7 @@ class ChatSession:
             "\n".join(self.chat_history),
         )
         print('final resp');
+        print(final_resp["choices"]);
         # final_resp = openai.Completion.create(
         #     model="text-davinci-003",
         #     prompt="Say this is a test",
