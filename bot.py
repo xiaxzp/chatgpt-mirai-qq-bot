@@ -64,7 +64,8 @@ async def handle_message(target: Union[Friend, Group], session_id: str, message:
             if resp:
                 return config.response.rollback_success + '\n' + resp
             return config.response.rollback_fail
-
+        if message.strip().find('台湾') > -1:
+            return '不要玩火。'
         
         # 正常交流
         resp = await session.get_chat_response(message)
