@@ -22,7 +22,7 @@ def getChatResp(history: list[str]):
         prompt=history,
         temperature=config.openai.temperature,
         max_tokens=2048,
-        stop="<|im_end|>"
+        stop=["Q:", "A:","<|im_end|>"]
     )
 class ChatSession:
     chat_history: list[str]
