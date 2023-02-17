@@ -16,7 +16,8 @@ config = Config.load_config()
 openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
 def getChatResp(history: list[str]):
-    openai.Completion.create(
+    print(history);
+    return openai.Completion.create(
         model="text-davinci-003",
         prompt=history,
         temperature=config.openai.temperature,
