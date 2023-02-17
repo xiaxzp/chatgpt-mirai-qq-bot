@@ -23,6 +23,8 @@ def getChatResp(history: list[str]):
         prompt=history,
         temperature=config.openai.temperature,
         max_tokens=2048,
+        presence_penalty=0.5,
+        frequency_penalty=1,
         stop=["<|im_end|>"]
     )
 class ChatSession:
@@ -58,7 +60,7 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        self.chat_history.append('Q: '+ message + '<|im_end|>');
+        self.chat_history.append('Human: '+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
@@ -75,8 +77,8 @@ class ChatSession:
         # )
         final_resp = final_resp["choices"][0]["text"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
-        final_resp = re.sub("^\n*A:", '', final_resp)
-        self.chat_history.append('A: '+ final_resp[0:12] + '<|im_end|>');
+        final_resp = re.sub("^\n*AI:", '', final_resp)
+        self.chat_history.append('AI: '+ final_resp[0:12] + '<|im_end|>');
         print(final_resp);
         return final_resp
 
