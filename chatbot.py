@@ -60,10 +60,10 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        if len(self.chat_history) > 10:
+        if len(self.chat_history) > 8:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
-        self.chat_history.append('Human: '+ message[0:20] + '<|im_end|>');
+        self.chat_history.append('Human: '+ message[0:20]);
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
@@ -82,7 +82,7 @@ class ChatSession:
         final_resp = final_resp["choices"][0]["text"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
         final_resp = re.sub("^\s*\n*AI:", '', final_resp)
-        self.chat_history.append('AI: '+ final_resp[0:12] + '<|im_end|>');
+        self.chat_history.append('AI: '+ final_resp[0:20] + '<|im_end|>');
         print(final_resp);
         return final_resp
 
