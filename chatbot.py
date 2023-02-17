@@ -13,7 +13,7 @@ import json
 import openai
 
 config = Config.load_config()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
 def getChatResp(history: list[str]):
     openai.Completion.create(
