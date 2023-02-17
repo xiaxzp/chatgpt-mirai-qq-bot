@@ -74,6 +74,7 @@ class ChatSession:
         #     stop="<|im_end|>"
         # )
         final_resp = final_resp["choices"][0]["text"]
+        self.chat_history.append('A: '+ final_resp[0:12] + '<|im_end|>');
         return final_resp
 
 __sessions = {}
