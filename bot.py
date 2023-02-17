@@ -15,7 +15,7 @@ from graia.ariadne.message.chain import MessageChain
 from graia.ariadne.message.parser.base import DetectPrefix, MentionMe
 from graia.ariadne.event.mirai import NewFriendRequestEvent, BotInvitedJoinGroupRequestEvent
 from graia.ariadne.message.element import Image
-from graia.ariadne.model import Friend, Group
+from graia.ariadne.model import Friend, Group, Member
 from loguru import logger
 
 import re
@@ -87,14 +87,13 @@ async def friend_message_listener(app: Ariadne, friend: Friend, source: Source, 
 GroupTrigger = Annotated[MessageChain, MentionMe(config.trigger.require_mention != "at"), DetectPrefix(config.trigger.prefix)] if config.trigger.require_mention != "none" else Annotated[MessageChain, DetectPrefix(config.trigger.prefix)]
 
 @app.broadcast.receiver("GroupMessage")
-async def group_message_listener(group: Group, source: Source, chain: GroupTrigger):
+async def group_message_listener(menber: Member, group: Group, source: Source, chain: GroupTrigger):
 
     print('msg');
-    print(dir(group));
-    print(source);
-    print(dir(source));
+    print(menber);
+    print(menber.id);
     response = await handle_message(group, f"group-{group.id}", chain.display, source)
-    event = await app.send_message(group, response)
+    event = await app.send_message(group, response, quote=source if config.response.quote else False)
     if event.source.id < 0:
         img = text_to_image(text=response)
         b = BytesIO()
