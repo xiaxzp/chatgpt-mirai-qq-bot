@@ -64,7 +64,8 @@ class ChatSession:
         if len(self.chat_history) > 8:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
-        self.chat_history.append('Human: \n'+ message + '<|im_end|>');
+        self.chat_history.append(''+ message + '<|im_end|>');
+        # self.chat_history.append('Human: '+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
