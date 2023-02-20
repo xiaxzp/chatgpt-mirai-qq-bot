@@ -66,7 +66,7 @@ async def handle_message(target: Union[Friend, Group], session_id: str, message:
             return config.response.rollback_fail
         for item in ['台灣', '台湾','taiwan',]:
             if message.strip().find(item) > -1:
-                return '不要玩火。'
+                return '阿巴阿巴阿巴'
         
         # 正常交流
         resp = await session.get_chat_response(message)
