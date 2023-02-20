@@ -84,7 +84,11 @@ class ChatSession:
         final_resp = final_resp["choices"][0]["text"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
         final_resp = re.sub("^\s*\n*骰娘:", '', final_resp)
-        # self.chat_history.append('AI: '+ final_resp[0:30] + '<|im_end|>');
+
+        for item in ['台灣', '台湾','taiwan',]:
+            if final_resp.strip().find(item) > -1:
+                return '不要玩火。'
+        self.chat_history.append('骰娘:'+ final_resp + '<|im_end|>');
         print(final_resp);
         return final_resp
 
