@@ -87,7 +87,7 @@ class ChatSession:
 
         for item in ['台灣', '台湾','taiwan',]:
             if final_resp.strip().find(item) > -1:
-                return '不要玩火。'
+                final_resp = '不要玩火。'
         self.chat_history.append('骰娘:'+ final_resp + '<|im_end|>');
         print(final_resp);
         return final_resp
