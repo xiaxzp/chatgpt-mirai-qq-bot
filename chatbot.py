@@ -16,15 +16,16 @@ import re
 config = Config.load_config()
 openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
-def getChatResp(history: list[str]):
+def getChatResp(history: str):
     print(history);
     return openai.Completion.create(
         model="text-davinci-003",
         prompt=history,
         temperature=config.openai.temperature,
-        max_tokens=2000,
-        presence_penalty=0.5,
+        max_tokens=1024,
+        presence_penalty=0.6,
         frequency_penalty=1,
+        top_p=1,
         stop=["<|im_end|>"]
     )
 class ChatSession:
@@ -63,7 +64,7 @@ class ChatSession:
         if len(self.chat_history) > 8:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
-        self.chat_history.append('Human: '+ message[0:30] + '<|im_end|>');
+        self.chat_history.append('Human: \n'+ message + '<|im_end|>');
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
@@ -82,7 +83,7 @@ class ChatSession:
         final_resp = final_resp["choices"][0]["text"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
         final_resp = re.sub("^\s*\n*AI:", '', final_resp)
-        self.chat_history.append('AI: '+ final_resp[0:30] + '<|im_end|>');
+        # self.chat_history.append('AI: '+ final_resp[0:30] + '<|im_end|>');
         print(final_resp);
         return final_resp
 
