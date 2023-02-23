@@ -30,6 +30,7 @@ def getChatResp(history: str):
     )
 class ChatSession:
     chat_history: list[str]
+    __default_chat_history: list[str] = []
     def __init__(self):
         self.load_conversation()
 
@@ -48,7 +49,7 @@ class ChatSession:
             return config.presets.loaded_successful
 
     def reset_conversation(self):
-        self.chat_history = self.__default_chat_history.copy()
+        self.chat_history = []
 
     def rollback_conversation(self) -> bool:
         if len(self.chat_history) < 1:
@@ -61,7 +62,7 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        if len(self.chat_history) > 8:
+        if len(self.chat_history) > 10:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
         self.chat_history.append('Human: '+ message + '<|im_end|>');
@@ -70,7 +71,7 @@ class ChatSession:
         final_resp = await loop.run_in_executor(
             None,
             getChatResp,
-            "\n".join(self.chat_history) + '\n骰娘: ',
+            "\n".join(self.__default_chat_history + self.chat_history) + '\n骰娘: ',
         )
         print('final resp');
         print(final_resp["choices"]);
