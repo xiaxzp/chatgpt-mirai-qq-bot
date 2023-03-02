@@ -16,7 +16,7 @@ import re
 config = Config.load_config()
 openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
-def getChatResp(history: list):
+def getChatResp(history: list[dict]):
     print(history);
     return openai.Completion.create(
         model="gpt-3.5-turbo",
@@ -29,8 +29,8 @@ def getChatResp(history: list):
         # stop=["<|im_end|>"]
     )
 class ChatSession:
-    chat_history: list
-    __default_chat_history: list = []
+    chat_history: list[dict]
+    __default_chat_history: list[dict] = []
     def __init__(self):
         self.load_conversation()
 
@@ -41,10 +41,10 @@ class ChatSession:
             else:
                 raise ValueError("预设不存在，请检查你的输入是否有问题！")
         else:
-            self.__default_chat_history = {
+            self.__default_chat_history = [{
                 "role": "system",
                 "content": config.load_preset(keyword),
-            }
+            }]
         self.reset_conversation()
         return config.presets.loaded_successful
 
