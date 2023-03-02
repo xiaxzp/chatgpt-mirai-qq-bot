@@ -18,7 +18,7 @@ openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
 def getChatResp(history: list[dict]):
     print(history);
-    return openai.Completion.create(
+    return openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=history,
         temperature=config.openai.temperature,

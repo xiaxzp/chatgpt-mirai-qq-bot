@@ -1,5 +1,5 @@
 graia-ariadne>=0.10.3
 Pillow>=9.3.0
-openai
+openai>=23.0.0
 tiktoken
 toml
