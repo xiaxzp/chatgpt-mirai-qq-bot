@@ -16,7 +16,7 @@ import re
 config = Config.load_config()
 openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
-def getChatResp(history: list[dict]):
+def getChatResp(history: list):
     print(history);
     return openai.Completion.create(
         model="gpt-3.5-turbo",
@@ -29,8 +29,8 @@ def getChatResp(history: list[dict]):
         # stop=["<|im_end|>"]
     )
 class ChatSession:
-    chat_history: list[dict]
-    __default_chat_history: list[dict] = []
+    chat_history: list
+    __default_chat_history: list = []
     def __init__(self):
         self.load_conversation()
 
