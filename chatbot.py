@@ -16,21 +16,21 @@ import re
 config = Config.load_config()
 openai.api_key = config.openai.api_key;
 # bot = Chatbot(api_key=config.openai.api_key)
-def getChatResp(history: str):
+def getChatResp(history: list[dict]):
     print(history);
     return openai.Completion.create(
-        model="text-davinci-003",
-        prompt=history,
+        model="gpt-3.5-turbo",
+        messages=history,
         temperature=config.openai.temperature,
-        max_tokens=1024,
+        max_tokens=2048,
         presence_penalty=0.6,
         frequency_penalty=1,
         top_p=1,
-        stop=["<|im_end|>"]
+        # stop=["<|im_end|>"]
     )
 class ChatSession:
-    chat_history: list[str]
-    __default_chat_history: list[str] = []
+    chat_history: list[dict]
+    __default_chat_history: list[dict] = []
     def __init__(self):
         self.load_conversation()
 
@@ -41,12 +41,12 @@ class ChatSession:
             else:
                 raise ValueError("预设不存在，请检查你的输入是否有问题！")
         else:
-            self.__default_chat_history = config.load_preset(keyword)
+            self.__default_chat_history = {
+                "role": "system",
+                "content": config.load_preset(keyword),
+            }
         self.reset_conversation()
-        if len(self.chat_history) > 0:
-            return self.chat_history[-1].split('\nChatGPT:')[-1].strip().rstrip("<|im_end|>")
-        else:
-            return config.presets.loaded_successful
+        return config.presets.loaded_successful
 
     def reset_conversation(self):
         self.chat_history = []
@@ -58,20 +58,23 @@ class ChatSession:
         if len(self.chat_history)  == 0:
             return ''
         else:
-            return self.chat_history[-1].split('\nChatGPT:')[-1].strip().rstrip("<|im_end|>")
+            return self.chat_history[-1]["content"];
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
         if len(self.chat_history) > 10:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
-        self.chat_history.append('Human: '+ message + '<|im_end|>');
-        # self.chat_history.append('Human: '+ message + '<|im_end|>');
+        self.chat_history.append({
+            "role": "user", #assistant
+            "content": message,
+        });
+
         loop = asyncio.get_event_loop()
         final_resp = await loop.run_in_executor(
             None,
             getChatResp,
-            "\n".join(self.__default_chat_history + self.chat_history) + '\n骰娘: ',
+            self.__default_chat_history + self.chat_history,
         )
         print('final resp');
         print(final_resp["choices"]);
@@ -82,14 +85,17 @@ class ChatSession:
         #     max_tokens=7,
         #     stop="<|im_end|>"
         # )
-        final_resp = final_resp["choices"][0]["text"]
+        final_resp = final_resp["choices"][0]["message"]["content"]
         final_resp = final_resp if final_resp else '阿巴阿巴'
-        final_resp = re.sub("^\s*\n*骰娘:", '', final_resp)
+        # final_resp = re.sub("^\s*\n*骰娘:", '', final_resp)
 
         for item in ['台灣', '台湾','taiwan',]:
             if final_resp.strip().find(item) > -1:
                 final_resp = '阿巴阿巴阿巴'
-        self.chat_history.append('骰娘:'+ final_resp + '<|im_end|>');
+        self.chat_history.append({
+            "role": "assistant",
+            "content": final_resp,
+        });
         print(final_resp);
         return final_resp
 
