@@ -62,7 +62,7 @@ class ChatSession:
 
     async def get_chat_response(self, message) -> str:
         # bot.prompt.chat_history = self.chat_history
-        if len(self.chat_history) > 10:
+        if len(self.chat_history) > 20:
             self.chat_history.pop(0);
             self.chat_history.pop(0);
         self.chat_history.append({
